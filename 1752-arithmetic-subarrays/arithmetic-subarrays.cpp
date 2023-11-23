@@ -1,19 +1,24 @@
 class Solution {
 public:
-    bool solve(vector<int> & temp,int left,int right)
+    bool solve(vector<int> & temp)
     {
-        // vector<int> a(begin(temp)+left,begin(temp)+right);
-        vector<int> a;
-        for(int i=left;i<=right;i++)
+        int maxi=INT_MIN,mini=INT_MAX,n=temp.size();
+        unordered_set<int> st;
+        for(int i=0;i<n;i++)
         {
-            a.push_back(temp[i]);
+            maxi=max(maxi,temp[i]);
+            mini=min(mini,temp[i]);
+            st.insert(temp[i]);
         }
-        sort(begin(a),end(a));
-        int diff=a[1]-a[0];
-        for(int i=1;i<a.size();i++)
+        if((maxi-mini)%(temp.size()-1)!=0)
+            return false;
+        int diff=(maxi-mini)/(temp.size()-1);
+        int curr=mini+diff;
+        while(curr<maxi)
         {
-            if(a[i]-a[i-1]!=diff)
+            if(st.find(curr)==st.end())
                 return false;
+            curr+=diff;
         }
         return true;
     }
@@ -21,9 +26,8 @@ public:
         vector<bool> ans;
         for(int i=0;i<l.size();i++)
         {
-            // vector<int> temp;
-            // temp=substr(l[i],r[i]-l[i]+1);
-            if(solve(nums,l[i],r[i]))
+            vector<int> temp(nums.begin()+l[i],nums.begin()+r[i]+1);
+            if(solve(temp))
                 ans.push_back(true);
             else
                 ans.push_back(false);
