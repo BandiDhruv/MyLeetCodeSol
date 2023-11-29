@@ -1,28 +1,36 @@
-#pragma GCC optimize("O3", "unroll-loops")
 class Solution {
-public:
-    int numberOfWays(string& corridor) {
-        const long long mod=1e9+7;
-        int n=corridor.rfind('S'), count=1;
-        if (n<1) return 0;
-        vector<int> seat={-1, -1};
-        seat[0]=corridor.find('S');
-
-        if (seat[0]==-1) return 0;
-
-        long long ans=1;
-
-        for(int i=seat[0]+1; i<=n; i++){
-            if (corridor[i]=='S'){
-                seat[count&1]=i;
-                if ((count&1)==0) {
-                //    cout<<"d="<<i-seat[1]<<endl;
-                    ans=(ans*(i-seat[1])%mod);
-                }
-                count++;
-            }     
+public:int m=1e9+7;
+    int numberOfWays(string corridor) {
+        int seats=0,plants=0;
+        for(int i=0;i<corridor.size();i++)
+        {
+            if(corridor[i]=='P')
+                plants++;
+            else
+                seats++;
         }
-        if (count&1) return 0;
+        cout<<seats<<" . "<<plants<<endl;
+        if(seats%2!=0)
+            return 0;
+        if(seats==2)
+            return 1;
+        if(seats==0)
+            return 0;
+        // return plants;
+        int con=0;
+        long long int ans=1;
+        int prev=0;
+        for(int i=0;i<corridor.size();i++)
+        {
+            if(corridor[i]=='S' ){
+                con++;
+                if(con%2!=0 && con>2)
+                {
+                    ans=ans*(i-prev)%m;
+                }
+                prev=i;
+            }
+        }
         return ans;
     }
 };
