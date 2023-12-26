@@ -16,7 +16,7 @@ struct cmp{
         // vector<vector<int>> vis(grid.size(),vector<int>(grid[0].size(),0));
         if(grid[0][0]==1)return -1;
         if(n==1 && m==1) return 1;
-        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,cmp> pq;
+        queue<pair<int,pair<int,int>>> pq;
         pq.push({1,{0,0}});
         vector<pair<int,int>>dir = {{-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1}};
         vector<vector<int>> res(n,vector<int>(m,1e9));
@@ -24,9 +24,9 @@ struct cmp{
 
         while(!pq.empty())
         {
-            int x=pq.top().second.first;
-            int y=pq.top().second.second;
-            int dis=pq.top().first;
+            int x=pq.front().second.first;
+            int y=pq.front().second.second;
+            int dis=pq.front().first;
             // vis[x][y]=1;
             // cout<<x<<" "<<y<<" "<<endl;
             pq.pop();
