@@ -26,7 +26,9 @@ public:
                 int ny=y+dy[i];
                 if(isValid(nx,ny))
                 {
+                    // ye wali line nahin samaj aa rahi thiiii
                     int curef=max(abs(heights[nx][ny]-heights[x][y]),effort);
+                    
                     if(curef<eff[nx][ny]){
                         eff[nx][ny]=curef;
                         pq.push({curef,{nx,ny}});
