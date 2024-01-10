@@ -40,7 +40,6 @@ public:
             ans = level;
             qe.pop();
             for (auto it : adj[val]) {
-                cout << it << "  ->" << endl;
                 if (it == parent)
                     continue;
                 qe.push({it, {val, level + 1}});
