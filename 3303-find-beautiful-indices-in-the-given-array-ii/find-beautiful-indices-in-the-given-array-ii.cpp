@@ -98,23 +98,18 @@ public:
                 }
             }
         }
-        for(int i=0;i<astore.size();i++)
-        {
-            cout<<astore[i]<<" ";
-        }
-        cout<<endl;
-        for(int i=0;i<bstore.size();i++)
-        {
-            cout<<bstore[i]<<" ";
-        }
-        cout<<endl;
+        
         vector<int> ans;
-        for(int i=0;i<astore.size();i++)
+        for(int i=0,j=0;i<astore.size() && j<bstore.size();)
         {
-            // int target=astore[i]-k;
-            auto s=lower_bound(bstore.begin(),bstore.end(),astore[i]-k)-bstore.begin();
-            auto p=lower_bound(bstore.begin(),bstore.end(),astore[i]+k+1)-bstore.begin();
-            if((p-s))ans.push_back(astore[i]);
+            if(abs(astore[i]-bstore[j])<=k)
+            {
+                ans.push_back(astore[i]);
+                i++;
+            }
+            else if(astore[i]<bstore[j])
+                i++;
+            else j++;
         }
         return ans;
     }
