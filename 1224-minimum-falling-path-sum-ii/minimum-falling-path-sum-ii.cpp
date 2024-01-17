@@ -1,27 +1,25 @@
 class Solution {
 public:
-    int n;
-    int solve(vector<vector<int>>&grid,int i,int j,vector<vector<int>> &dp)
-    {
-        if(i<0 || j<0 || i>=n || j>=n)return 1e9;
-        if(dp[i][j]!=-1)return dp[i][j];
-        if(i==n-1)return grid[i][j];
-        int res=1e9;
-        for(int idx=0;idx<n;idx++)
-        {
-            if(idx==j)continue;
-            res=min(res,grid[i][j]+solve(grid,i+1,idx,dp));
+    int t[201][201];
+    int solve(int idx ,int last,vector<vector<int>>& grid){
+        if ( idx >= grid.size() ) return 0;
+        if ( last != -1  && t[idx][last] != -1 ) return t[idx][last];
+        int ans = 0;
+        int curr = INT_MAX;
+        for(int i = 0 ; i < grid[idx].size() ; i++){
+            int now = 0;
+            if ( last == -1 || i != last){
+                now = grid[idx][i] + solve(idx+1,i,grid);
+                curr = min(curr,now);
+            }
         }
-        return dp[i][j]=res;
+        ans = curr;
+        if ( last != -1 ) t[idx][last] = ans;
+        return ans;
+
     }
     int minFallingPathSum(vector<vector<int>>& grid) {
-        n=grid.size();
-        int res=1e9;
-        vector<vector<int>> dp(n,vector<int>(n,-1));
-        for(int i=0;i<n;i++)
-        {
-            res=min(res,solve(grid,0,i,dp));
-        }
-        return res;
+        memset(t,-1,sizeof(t));
+        return solve(0,-1,grid);
     }
 };
