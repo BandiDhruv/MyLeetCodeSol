@@ -32,7 +32,7 @@ public:
     //     return true;
     // }
     int ans=0;
-    void solve(TreeNode*root, vector<int>temp)
+    void solve(TreeNode*root, vector<int>&temp)
     {
         if(root==NULL)return ;
         // string temp;
@@ -50,7 +50,7 @@ public:
         
         if(root->left) solve(root->left,temp);
         if(root->right)solve(root->right,temp);
-
+        temp[root->val]--;
     }
     int pseudoPalindromicPaths (TreeNode* root) {
         if(root->left==NULL && root->right==NULL)return 1;
