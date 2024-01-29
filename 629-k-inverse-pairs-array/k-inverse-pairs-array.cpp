@@ -22,12 +22,12 @@ public:
         // int ans=0;
         for(int i=1;i<=n;i++)
         {
+            long long sum=1;
             for(int j=1;j<=k;j++)
             {
-                for(int inv=0;inv<=min(j,i-1);inv++)
-                {
-                    dp[i][j]=(dp[i][j]+dp[i-1][j-inv])%m;
-                }
+                sum+=dp[i-1][j];
+                if(j>=i)sum-=dp[i-1][j-i];
+                dp[i][j]=sum%m;
             }
         }
         return dp[n][k];
