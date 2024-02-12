@@ -4,13 +4,12 @@ public:
         if ( l == r ) return l;
         if ( l <= 1 ) return 0;
         
-        // int b1 = 31 - __builtin_clz(l);
-        // int b2 = 31 - __builtin_clz(r);
-        // if ( b1 != b2 ) return 0;
-        // int ans = (1<<b1);
+        int b1 = 31 - __builtin_clz(l);
+        int b2 = 31 - __builtin_clz(r);
+        if ( b1 != b2 ) return 0;
+        int ans = (1<<b1);
         // cout << ans;
-        int ans = 0;
-        for(int i = 31; i >= 0 ; i--){
+        for(int i = b1; i >= 0 ; i--){
             int l_bit = 0;
             int r_bit = 0;
             if ( (l&(1<<i)) != 0 ) l_bit = 1;
