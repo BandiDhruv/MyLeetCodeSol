@@ -2,40 +2,32 @@ class Solution {
 public:
     bool check(string &a,string &b)
     {
-        if(a.size()!=1+b.size())return false;
+        if(a.size()!=b.size()+1)return false;
         int i=0,j=0;
-        while(i<a.size())
+        for(;i<a.size();i++)
         {
-            if(a[i]==b[j]){
-                i++;
-                j++;
-            }
-            else{
-                i++;
-            }
+            if(a[i]==b[j])j++;
         }
-        // cout<<i<<" "<<j<< " "<<a.size()<<" "<<b.size()<<endl;
-        return (i==a.size() && j==b.size());
+        return i==a.size() and j==b.size();
     }
     bool static cmp(string &s1,string &s2)
     {
         return s1.size()<s2.size();
     }
-    int longestStrChain(vector<string>& words) {
-        sort(words.begin(),words.end(),cmp);
-        vector<int> dp(words.size()+1,1);
-        int maxi=INT_MIN;
-        for(int i=0;i<words.size();i++)
+
+    int longestStrChain(vector<string>& w) {
+        sort(w.begin(),w.end(),cmp);
+        vector<int> dp(w.size()+1,1);
+        int maxi=-1;
+        for(int i=0;i<w.size();i++)
         {
             for(int j=0;j<i;j++)
             {
-                // cout<<check(words[i],words[j])<<endl;
-                if(check(words[i],words[j]))
-                {
+                if(check(w[i],w[j])){
                     dp[i]=max(dp[i],1+dp[j]);
                 }
             }
-            maxi=max(maxi,dp[i]);
+            maxi=max(dp[i],maxi);
         }
         return maxi;
     }
