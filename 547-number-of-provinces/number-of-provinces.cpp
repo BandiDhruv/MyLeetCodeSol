@@ -1,80 +1,25 @@
-class DisjointSet{
-    vector<int> parent,rank,size;
-    public:
-    DisjointSet(int n)
-    {
-        parent.resize(n+1);
-        rank.resize(n+1,0);
-        size.resize(n+1,1);
-        for(int i=0;i<n;i++)
-        {
-            parent[i]=i;
-        }
-    }
-    int findUpar(int node)
-    {
-        if(node==parent[node])
-            return node;
-        return parent[node]=findUpar(parent[node]);
-    }
-    void unionByRank(int u,int v)
-    {
-        int pu=findUpar(u);
-        int pv=findUpar(v);
-        if(pu==pv)
-            return ;
-        if(rank[pu]<rank[pv])
-        {
-            parent[pu]=pv;
-        }
-        else if(rank[pu]>rank[pv])
-        {
-            parent[pv]=pu;
-        }
-        else {
-            parent[pu]=pv;
-            rank[pv]++;
-        }
-    }
-    void unionBySize(int u,int v)
-    {
-        int pu=findUpar(u);
-        int pv=findUpar(v);
-        if(pu==pv)
-            return ;
-        if(rank[pu]<rank[pv])
-        {
-            parent[pu]=pv;
-            size[pu]+=size[pv];
-        }
-        else 
-        {
-            parent[pv]=pu;
-            size[pu]+=size[pv];
-        }
-    }
-};
 class Solution {
 public:
-
-    int findCircleNum(vector<vector<int>>& isConnected) {
-        DisjointSet ds(isConnected.size());
-        // vector<pair<int,pair<int,int>>> edges;
-        for(int i=0;i<isConnected.size();i++)
+    void dfs(vector<vector<int>>& a,int node,vector<bool> &vis)
+    {
+        vis[node]=true;
+        for(int i=0;i<a[node].size();i++)
         {
-            for(int j=0;j<isConnected.size();j++)
-            {
-                if(isConnected[i][j]==1)
-                {
-                    ds.unionBySize(i,j);
-                }
-            }
+            if(a[node][i]==1 && !vis[i])
+                dfs(a,i,vis);
         }
+        return ;
+    }
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        vector<bool> vis(isConnected.size());
         int ans=0;
         for(int i=0;i<isConnected.size();i++)
         {
-            if(ds.findUpar(i)==i)
+            if(!vis[i])
+            {
+                dfs(isConnected,i,vis);
                 ans++;
+            }
         }
         return ans;
     }
