@@ -1,59 +1,52 @@
 class Solution {
 public:
-    bool isValid(int x,int y,int n,int m)
+    int n,m;
+    bool isValid(int i,int j)
     {
-        return (x>=0 && x<n && y>=0 && y<m);
+        if( i<0 || j<0 || i>=n || j>=m )return false;
+        return true;
     }
 
     int orangesRotting(vector<vector<int>>& grid) {
-        queue<pair<pair<int,int>,int>> q;
-        int cntfresh=0; 
-        int vis[grid.size()][grid[0].size()];
-        for(int i=0;i<grid.size();i++)
-        {
-            for(int j=0;j<grid[i].size();j++)
+        n=grid.size();m=grid[0].size();
+        int cntfresh=0;
+        vector<vector<int>> vis(n,vector<int>(m,0));    
+        queue<pair<int,pair<int,int>>> q;//1,{x,y}
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++)
             {
-                if(grid[i][j]==2)
-                {
-                    q.push({{i,j},0});
-                    vis[i][j]=2;
-                }
-
-                else{
-                    vis[i][j]=0;
-                }
-
+                if(grid[i][j]==2){q.push({0,{i,j}});vis[i][j]=2;}
+                else vis[i][j]=0;
                 if(grid[i][j]==1)cntfresh++;
             }
         }
-        int xd[]={-1,0,1,0};
-        int yd[]={0,1,0,-1};
-        int time=0;
-        int cnt=0;
+        int ans=0,res=0;
         while(!q.empty())
         {
-            int x=q.front().first.first;
-            int y=q.front().first.second;
-            int t=q.front().second;
-            q.pop(); 
-            time=max(time,t);
-            for(int j=0;j<4;j++)
+            int x=q.front().second.first;
+            int y=q.front().second.second;
+            int cnt=q.front().first;
+            q.pop();
+            ans=max(ans,cnt);
+            int dx[]={1,-1,0,0};
+            int dy[]={0,0,1,-1};
+            for(int i=0;i<4;i++)
             {
-                int nx=x+xd[j];
-                int ny=y+yd[j];
-                if(isValid(nx,ny,grid.size(),grid[0].size()))
+                int nx=x+dx[i];
+                int ny=y+dy[i];
+                if(isValid(nx,ny))
                 {
-                    if(vis[nx][ny]!=2 && grid[nx][ny]==1)
+                    if(vis[nx][ny]!=2 && grid[nx][ny] == 1)
                     {
-                        q.push({{nx,ny},t+1});
                         vis[nx][ny]=2;
-                        cnt++;
+                        q.push({cnt+1,{nx,ny}});
+                        res++;
                     }
                 }
             }
         }
-        if(cnt==cntfresh)
-            return time;
-        else return -1;
+        if(res==cntfresh)
+            return ans;
+        return -1;
     }
 };
