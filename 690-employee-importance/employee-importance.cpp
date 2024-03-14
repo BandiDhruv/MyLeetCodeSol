@@ -10,7 +10,6 @@ public:
 
 class Solution {
 public:
-//1->(2,3)
     int getImportance(vector<Employee*> e, int id) {
         map<int,vector<int>>mp;
         for(int i=0;i<e.size();i++){
@@ -26,6 +25,7 @@ public:
         }
         queue<int> q;
         q.push(id);
+
         while(!q.empty())
         {
             int ids=q.front();
@@ -34,15 +34,12 @@ public:
                 for(int i=0;i<e.size();i++){
                     if(e[i]->id==it){
                         ans+=e[i]->importance;
-                        // for(auto k:e[i]->subordinates)
-                        // {
-                            // cout<<k<<endl;
-                            q.push(it);
-                        // }
+                        q.push(it);
                     }
                 }
             }
         }
+
         return ans;
     }
 };
