@@ -1,19 +1,16 @@
 class Solution {
 public:
     int numSubarraysWithSum(vector<int>& nums, int goal) {
-        vector<int> pre(nums.size());
-        pre[0]=nums[0];
-        int n=nums.size();
-        for(int i=1;i<n;i++)pre[i]=pre[i-1]+nums[i];
+        map<int,int> mp;
+        // mp[0]=0;
+        int sum=0;
         int ans=0;
-        for(int i=0;i<n;i++)
+        for(auto it:nums)
         {
-            int sum=0;
-            for(int j=i;j<n;j++)
-            {
-               sum+=nums[j];
-               if(sum==goal)ans++;
-            }
+            sum+=it;
+            if(sum==goal)ans++;
+            if(mp.find(sum-goal)!=mp.end())ans+=mp[sum-goal];
+            mp[sum]++;
         }
         return ans;
     }
