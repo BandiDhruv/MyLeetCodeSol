@@ -1,17 +1,13 @@
 class Solution {
 public:
-    void solve(TreeNode*root,vector<int>&ans){
-        if(!root)return ;
-        if(root->left)solve(root->left,ans);
-        ans.push_back(root->val);
-        if(root->right)solve(root->right,ans);
+    bool solve(TreeNode*root,long long mini,long long maxi){
+        if(!root)return true;
+        if(root->val<=mini || root->val>=maxi)return false;
+        return solve(root->left,mini,root->val) && solve(root->right,root->val,maxi);
     }
+
     bool isValidBST(TreeNode* root) {
-        vector<int> ans;
-        solve(root,ans);
-        for(int i=0;i<ans.size()-1;i++){
-            if(ans[i]>=ans[i+1])return false;
-        }
-        return true;
+        long long mini=1ll*INT_MIN-1ll*1,maxi=1ll*INT_MAX+1*1ll;
+        return solve(root,mini,maxi);
     }
 };
