@@ -8,9 +8,9 @@ public:
             return t[i][cnt][first+1][last+1] = (cnt == 5)?1:0;
         if(t[i][cnt][first+1][last+1]!=-1)
             return t[i][cnt][first+1][last+1]%mod;
-        int ans=0;
-        int ans2=solve(i+1,n,s,cnt,first,last)%mod;
-        // if(cnt==5)ans=(solve(i+1,n,s,cnt,first,last))%mod;
+        int ans=0,ans2=0;
+        if(cnt>=5)ans=(solve(i+1,n,s,cnt,first,last))%mod;
+        else ans2=solve(i+1,n,s,cnt,first,last)%mod;
         if(cnt==4 && s[i]-'0'==first){ans=(solve(i+1,n,s,cnt+1,first,last))%mod;}
         if(cnt==3 && s[i]-'0'==last){ans=(solve(i+1,n,s,cnt+1,first,last))%mod;}
         if(cnt==2){ans=(solve(i+1,n,s,cnt+1,first,last))%mod;}
