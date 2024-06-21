@@ -13,7 +13,6 @@ public:
     }
     
     string get(string key, int timestamp) {
-        if(mp[key].size()==0)return "";
         int idx=lower_bound(mp[key].begin(),mp[key].end(),timestamp,cmp)-mp[key].begin();
         if(idx>0)return mp[key][idx-1].second;
         else return "";
