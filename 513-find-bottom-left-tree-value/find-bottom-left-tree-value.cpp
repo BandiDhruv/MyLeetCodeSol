@@ -11,19 +11,28 @@
  */
 class Solution {
 public:
-
+    int h(TreeNode*root){
+        if(!root)return 0;
+        int left=1+h(root->left),right=1+h(root->right);
+        return max(left,right);
+    }
     int findBottomLeftValue(TreeNode* root) {
-        queue<TreeNode*> q;
-        q.push(root);
-        int ans;
-        while(!q.empty())
-        {
-            auto node=q.front();
-            int val=node->val;
-            ans=val;
-            q.pop();
-            if(node->right)q.push(node->right);
-            if(node->left)q.push(node->left);
+        queue<pair<TreeNode*,int>> q;
+        q.push({root,1});
+        int ans=root->val;
+        int he=h(root);
+        while(!q.empty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                auto it=q.front();
+                if(it.second==he){
+                    return it.first->val;
+                    
+                }
+                q.pop();
+                if(it.first->left)q.push({it.first->left,it.second+1});
+                if(it.first->right)q.push({it.first->right,it.second+1});
+            }
         }
         return ans;
     }
