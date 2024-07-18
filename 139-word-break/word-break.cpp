@@ -1,48 +1,52 @@
 class Solution {
 public:
-    unordered_set<string> st;
-    bool solve(string s,int idx)
-    {
-        if(idx==s.size())
-            return true;
-        if(st.find(s)!=st.end())
-            return true;
-        for(int i=1;i<s.size();i++)
-        {
-            string temp=s.substr(idx,i);
-            if(st.find(temp)!=st.end() && solve(s,idx+i))
-                return true;
-        }
-        return false;
+    struct TrieNode{
+        unordered_map<char,TrieNode*> mp;
+        bool isEnd;
+    };
+    TrieNode*getNode(){
+        TrieNode*root=new TrieNode();
+        root->isEnd=false;
+        return root;
     }
-    bool solvemem(string s,int idx,vector<int>&dp)
-    {
-        if(idx==s.size())
-            return true;
-        if(dp[idx]!=-1)
-            return dp[idx];
-        if(st.find(s)!=st.end())
-            return true;
-        for(int i=1;i<s.size();i++)
-        {
-            string temp=s.substr(idx,i);
-            if(st.find(temp)!=st.end() && solvemem(s,idx+i,dp))
-                return dp[idx]=true;
+    void insert(TrieNode*temp,string word){
+        TrieNode*root=temp;
+        for(int i=0;i<word.size();i++){
+            char ch=word[i];
+            if(root->mp.find(ch)==root->mp.end())
+                root->mp[ch]=getNode();
+            root=root->mp[ch];
         }
-        return dp[idx]=false;
+        root->isEnd=true;
+    }
+
+    bool isP(TrieNode*t,string s){
+        for(int i=0;i<s.size();i++){
+            char ch=s[i];
+            if(t->mp.find(ch)==t->mp.end())
+                return false;
+            t=t->mp[ch];
+        }
+        return t->isEnd;
+    }
+    int dp[302];
+    bool solve(string s,int i,TrieNode*t){
+        if(i>=s.size())
+            return true;
+        if(dp[i]!=-1)return dp[i];
+        for(int j=i;j<s.size();j++){
+            if(isP(t,s.substr(i,j+1-i)) && solve(s,j+1,t))
+                return dp[i]=true;
+        }
+        return dp[i]=false;
+        
     }
     bool wordBreak(string s, vector<string>& wordDict) {
-        // string temp="";
-        // if(wordDict[0]==s)
-            // return true;
-        // return solve(s,wordDict,0,temp);
-        // return true;
-        for(auto it:wordDict)
-        {
-            st.insert(it);
+        TrieNode* t=new TrieNode();
+        for(auto it:wordDict){
+            insert(t,it);
         }
-        // return solve(s,0);
-        vector<int> dp(s.size()+1,-1);
-        return solvemem(s,0,dp);
+        memset(dp,-1,sizeof(dp));
+        return solve(s,0,t);
     }
 };
