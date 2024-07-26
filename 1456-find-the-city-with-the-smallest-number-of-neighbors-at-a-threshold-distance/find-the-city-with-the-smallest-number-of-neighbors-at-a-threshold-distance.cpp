@@ -1,47 +1,54 @@
 class Solution {
 public:
-    int findTheCity(int n, vector<vector<int>>& edges, int t) {
-        vector<vector<int>> mat(n,vector<int>(n,1e9));
-        for(auto it:edges)
-        {
-            mat[it[0]][it[1]]=it[2];
-            mat[it[1]][it[0]]=it[2];
-        }
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<n;j++)
-            {
-                if(i==j)mat[i][j]=0;
-            }
-        }
-        for(int k=0;k<n;k++)
-        {
-            for(int i=0;i<n;i++)
-            {
-                for(int j=0;j<n;j++)
-                {
-                    mat[i][j]=min(mat[i][j],mat[i][k]+mat[k][j]);
+    typedef pair<int, int> P;
+
+    void dijk(int src, vector<vector<int>>& dist, vector<pair<int, int>> adj[]) {
+        priority_queue<P, vector<P>, greater<P>> pq;
+        vector<int> vis(dist.size(), 0);
+        pq.push({0, src});
+        dist[src][src] = 0;
+        
+        while (!pq.empty()) {
+            int dis = pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+
+            if (vis[node]) continue;
+            vis[node] = 1;
+
+            for (auto it : adj[node]) {
+                if (!vis[it.first] && dis + it.second < dist[src][it.first]) {
+                    dist[src][it.first] = dis + it.second;
+                    pq.push({dist[src][it.first], it.first});
                 }
             }
         }
-        int ans=n+1;
-        int city=-1;
-        for(int i=0;i<n;i++)
-        {
-            int cnt=0;
-            for(int j=0;j<n;j++)
-            {
-                if(mat[i][j] <=t)
-                {
-                    cnt++;
-                }
+    }
+
+    int findTheCity(int n, vector<vector<int>>& edges, int k) {
+        vector<vector<int>> dist(n, vector<int>(n, 1e8));
+        vector<pair<int, int>> adj[n];
+
+        for (auto it : edges) {
+            adj[it[0]].push_back({it[1], it[2]});
+            adj[it[1]].push_back({it[0], it[2]});
+        }
+
+        for (int i = 0; i < n; ++i) {
+            dijk(i, dist, adj);
+        }
+
+        int ans = INT_MAX, res = -1;
+        for (int i = 0; i < n; ++i) {
+            int cnt = 0;
+            for (int j = 0; j < n; ++j) {
+                if (dist[i][j] <= k) cnt++;
             }
-            if(ans>=cnt)
-            {
-                ans=cnt;
-                city=i;
+            if (cnt <= ans) {
+                ans = cnt;
+                res = i;
             }
         }
-        return city;
+        return res;
     }
 };
