@@ -1,34 +1,40 @@
 class Solution {
 public:
-    void setZeroes(vector<vector<int>>& ma) {
-        int n=ma.size(),m=ma[0].size(),col0=1;
+    void setZeroes(vector<vector<int>>& matrix) {
+        int n=matrix.size(),m=matrix[0].size();
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
-                if(ma[i][j]==0){
-                    ma[i][0]=0;
-                    if(j!=0)
-                        ma[0][j]=0;
-                    else col0=0;
+                if(matrix[i][j]==0){
+                    int ni=i,nj=j;
+                    while(ni>=0){
+                        if(matrix[ni][j]!=0)
+                            matrix[ni][j]=-1e9;
+                        ni--;
+                    }
+                    ni=i;
+                    while(ni<n){
+                        if(matrix[ni][j]!=0)
+                            matrix[ni][j]=-1e9;
+                        ni++;
+                    }
+                    while(nj>=0){
+                        if(matrix[i][nj]!=0)
+                            matrix[i][nj]=-1e9;
+                        nj--;
+                    }
+                    nj=j;
+                    while(nj<m){
+                        if(matrix[i][nj]!=0)
+                            matrix[i][nj]=-1e9;
+                        nj++;
+                    }
                 }
             }
         }
-        for(int i=1;i<n;i++){
-            for(int j=1;j<m;j++){
-                if(ma[i][j]!=0 ){
-                    if(ma[i][0]== 0 || ma[0][j]==0)ma[i][j]=0;
-                }
+        for(auto &it:matrix){
+            for(auto &i:it){
+                if(i==-1e9)i=0;
             }
         }
-        if(ma[0][0]==0){
-            for(int i=0;i<m;i++){
-                ma[0][i]=0;
-            }
-        }
-        if(col0==0){
-            for(int i=0;i<n;i++){
-                ma[i][0]=0;
-            }
-        }
-        return ;
     }
 };
