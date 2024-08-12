@@ -1,48 +1,42 @@
 class Solution {
 public:
-    int n,m;
-    bool isPossible(int mid,vector<int>& nums, vector<int>& change)
-    {
-        unordered_map<int,int> last;
-        for(int i=0;i<mid;i++){
-            last[change[i]-1]=i;
+    bool solve(int mid,vector<int>&nums,vector<int> changeIndices){
+        long long  n=nums.size(),m=changeIndices.size();
+        vector<long long > lastIndices(n+1,-1);
+        for(int i=mid-1;i>=0;i--){
+            if(lastIndices[changeIndices[i]]==-1)
+                lastIndices[changeIndices[i]]=i+1;
         }
-        if(last.size()!=n)return false;
-        int operations=0,marked=0;
-        for(int i=0;i<mid;i++)
-        {
-            if(i==last[change[i]-1])
-            {
-                if(operations>=nums[change[i]-1])
-                {
-                    operations-=nums[change[i]-1];
-                    marked++;
-                }
-                else return false;
-            }
-            else operations++;
+        for(int i=1;i<lastIndices.size();i++)if(lastIndices[i]==-1)return false;
+        long long cnt=0;
+        vector<pair<long long ,long long >> vp;
+        for(int i=1;i<=n;i++)vp.push_back({lastIndices[i],i});
+        sort(vp.begin(),vp.end());
+        for(int i=0;i<vp.size();i++){
+            int lastIndex=vp[i].first;
+            int index=vp[i].second;
+            int needed=nums[index-1];
+            long long  available=lastIndex - 1 - cnt;
+            if(available>=needed)
+                cnt+=needed+1;
+            else return false;
         }
-        return marked==n;
+        return true;
     }
-    int earliestSecondToMarkIndices(vector<int>& nums, vector<int>& change) {
-        n=nums.size();
-        m=change.size();
-        int lo=0,hi=m;
-        int ans=-1;
-        while(lo<=hi)
-        {
-            int mid=lo+(hi-lo)/2;
-            if(isPossible(mid,nums,change))
-            {
+    int earliestSecondToMarkIndices(vector<int>& nums, vector<int>& changeIndices) {
+        int n=nums.size(),m=changeIndices.size();
+        long long cnt=0,ans=-1;
+        for(int i=0;i<n;i++)cnt+=nums[i]+1;
+        if(cnt>m)return -1;
+        int lo=cnt,high=m;
+        while(lo<=high){
+            int mid=lo+(high-lo)/2;
+            if(solve(mid,nums,changeIndices)){
                 ans=mid;
-                hi=mid-1;
+                high=mid-1;
             }
-            else {
-                lo=mid+1;
-            }
+            else lo=mid+1;
         }
-        if(ans==-1 || ans==m+1)return -1;
         return ans;
-
     }
 };
