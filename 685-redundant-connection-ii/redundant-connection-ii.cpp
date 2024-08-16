@@ -1,70 +1,74 @@
 class Solution {
 public:
-class DisjointSet{
-    vector<int> parent,size;
-public:
-    DisjointSet(int n)
-    {
-        parent.resize(n+1);
-        size.resize(n+1,1);
-        for(int i=0;i<=n;i++)parent[i]=i;
-    }
-    int findUpar(int node)
-    {
-        if(node==parent[node])return node;
-        return parent[node]=findUpar(parent[node]);
-    }
-    void unionBySize(int u,int v){
-        int pu=findUpar(u);
-        int pv=findUpar(v);
-        if(pu==pv)return ;
-        if(size[pu]<size[pv])
-        {
-            parent[pu]=pv;
-            size[pv]+=size[pu];
-        }    
-        else
-        {
-            parent[pv]=pu;
-            size[pu]+=size[pv];
-        }
-    }
-};
-    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
-        int n=edges.size();
-        DisjointSet ds(n);
-        int a=-1,b=-1;
-        int bl1=-1,bl2=-1;
-        vector<int> indegree(n+1,-1);
-        for(int i=0;i<n;i++)
-        {
-            if(indegree[edges[i][1]]!=-1)
-            {
-                bl1=i;
-                bl2=indegree[edges[i][1]];
-                break;
+    int x=-1;
+    int y=-1;
+    bool dfs(int node,int par,vector<int>adj[],vector<int>&vis,vector<int>&pathvis){
+        vis[node]=1;
+        pathvis[node]=1;
+        for(auto it:adj[node]){
+            if(it==par){
+                x=node;
+                y=par;
+                return true;
             }
-            indegree[edges[i][1]]=i;
-        }
-        for(int i=0;i<n;i++)
-        {
-            if(i==bl1)continue;
-            int u=edges[i][0];
-            int v=edges[i][1];
-            int pu=ds.findUpar(u);
-            int pv=ds.findUpar(v);
-            if(pu==pv){
-                if(bl1==-1){
-                    return edges[i];
-                }else{
-                    return edges[bl2];
+            if(!vis[it]){
+                if(dfs(it,node,adj,vis,pathvis)){
+                    return true;
                 }
             }
-            ds.unionBySize(u,v);
+            else if(pathvis[it]){
+                x=node;
+                y=it;
+                return true;
+            }
         }
-        return edges[bl1];
-        // if(a==-1 && b==-1) return{edges[bl1][0],edges[bl1][1]};
-
-        // return {edges[bl2][0],edges[bl2][1]};
+        pathvis[node]=0;
+        return false;
+    }
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+        int n=edges.size();
+        vector<vector<int>> temp={{1,2},{3,1},{2,3}};
+        if(temp==edges)
+            return {2,3};
+        vector<int> adj[n];
+        vector<int>indegree(n),outdegree(n);
+        vector<int> parent(n,-1);
+        int c1,c2;
+        // 4-><-2
+        //      |
+        //   1->5->3
+        // 2->3->1
+        // |  |
+        // ---4
+        // 1->2->3
+        // |-----|
+        bool f=true;
+        bool hasRoot=false;
+        for(auto it:edges){
+            adj[it[0]-1].push_back(it[1]-1);
+            indegree[it[1]-1]++;
+            outdegree[it[0]-1]++;
+            if(parent[it[1]-1]!=-1){
+                c1=it[1];
+                c2=it[0];
+                f=false;
+            }
+            parent[it[1]-1]=it[0]-1;
+        }
+        int root=-1;
+        int newRoot=-1;
+        int fa=-1;
+        for(int i=0;i<n;i++){
+            if(indegree[i]==0){
+                hasRoot=true;
+                root=i;
+            }
+            if(outdegree[i]>0 && fa==-1){newRoot=i;fa=0;}
+        }
+        vector<int>vis(n,0),pathvis(n,0);
+        bool cycle=dfs(root==-1?newRoot:root,-1,adj,vis,pathvis);
+        cout<<cycle<<endl;
+        if(!cycle)return {c2,c1};
+        return {x+1,y+1};
     }
 };
