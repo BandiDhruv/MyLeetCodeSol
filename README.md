@@ -10,4 +10,13 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [1025-minimum-cost-for-tickets](https://github.com/BandiDhruv/MyLeetCodeSol/tree/master/1025-minimum-cost-for-tickets) |
+| [1813-maximum-erasure-value](https://github.com/BandiDhruv/MyLeetCodeSol/tree/master/1813-maximum-erasure-value) |
+## Hash Table
+|  |
+| ------- |
+| [1813-maximum-erasure-value](https://github.com/BandiDhruv/MyLeetCodeSol/tree/master/1813-maximum-erasure-value) |
+## Sliding Window
+|  |
+| ------- |
+| [1813-maximum-erasure-value](https://github.com/BandiDhruv/MyLeetCodeSol/tree/master/1813-maximum-erasure-value) |
 <!---LeetCode Topics End-->
